@@ -12,13 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Scheduler.Resources
+namespace Scheduler
 {
-    public partial class Window1 : Window
+    public partial class PopupWindow : Window
     {
-        public Window1()
+        public PopupWindow()
         {
             InitializeComponent();
+            double cm = (double)(new System.Windows.LengthConverter().ConvertFrom("1cm"));
+            this.Width = 10 * cm;
+            this.Height = 3 * cm;
         }
     }
 }

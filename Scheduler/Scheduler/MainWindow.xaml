@@ -9,7 +9,6 @@
         mc:Ignorable="d"
         Title="MainWindow"
         Topmost="True"
-        Initialized="Window_Initialized"
         Width="1"
         Height="1"
         Left="2" 
