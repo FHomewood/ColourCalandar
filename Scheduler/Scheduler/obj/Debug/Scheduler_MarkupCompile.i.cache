@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-E:\Frankie\Documents\GitHub\Scheduler\Scheduler\Scheduler\obj\Debug\
+E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\obj\Debug\
 Scheduler
 none
 false
 DEBUG;TRACE
-E:\Frankie\Documents\GitHub\Scheduler\Scheduler\Scheduler\App.xaml
-11151548125
+E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\App.xaml
+2-2004361756
 
-9-25375578
+10598657201
 131569487696
-MainWindow.xaml;
+MainWindow.xaml;Resources\PopupWindow.xaml;
 
-False
+True
 
