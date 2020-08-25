@@ -35,15 +35,17 @@ namespace Scheduler
         DispatcherTimer dispatcherTimer = new DispatcherTimer();
 
         //Colour variables
-        double hue = 0;
+        public double hue = 0;
         int transition = 1;
 
         //Create popup window object
-        PopupWindow popup = new PopupWindow();
+        PopupWindow popup;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            popup = new PopupWindow(this);
             //Set Screen to the primary monitor
             this.Width = System.Windows.SystemParameters.PrimaryScreenWidth;
             this.Height = System.Windows.SystemParameters.PrimaryScreenHeight;
@@ -54,6 +56,9 @@ namespace Scheduler
             dispatcherTimer.Tick += dispatcherTimer_Tick;
             //Begin the timer
             dispatcherTimer.Start();
+
+            //temporary show popup
+            popup.Show();
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -68,7 +73,6 @@ namespace Scheduler
 
         void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-
             int mSecondsInTransition = 100;
             int framesInTransition = 50;
             double hueChange = 1f * Math.PI / 3f;
@@ -90,16 +94,17 @@ namespace Scheduler
                     (byte)(128 + 127 * Math.Cos(hue + 4 * Math.PI / 3))
                 ));
 
-                //if this is the end of the transition we set the next check to the next next minute (to the dot)
+                //if this is the end of the transition we set the next check to the next next minute (on the dot)
                 if (transition == 0)
                 {
                     dispatcherTimer.Interval = new TimeSpan(10 * 1000 * (1000 - DateTime.Now.Millisecond) + 10 * 1000 * 1000 * (59 - DateTime.Now.Second));
-                    popup.Hide();
+                    //popup hide at the end of transition
+                    //popup.Hide();
                 }
             }
             //If we're not mid-transition between scenes
             //Check if we're due to transition
-            else if (DateTime.Now.Minute % 2 != 0)
+            else if (DateTime.Now.Minute % 1 != 0)
             {
                 //not due? check again in 1 minute
                 dispatcherTimer.Interval = new TimeSpan(10 * 1000 * 1000 * 60);
@@ -111,7 +116,8 @@ namespace Scheduler
                 transition = framesInTransition;
                 //reset quickly so the transition can be initiated
                 dispatcherTimer.Interval = new TimeSpan(1);
-                popup.Show();
+                //popup show location at beginning of transition
+                //popup.Show();
             }
         }
     }

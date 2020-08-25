@@ -13,5 +13,5 @@
         Height="1"
         Left="2" 
         Top="0" 
-        Margin="0" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" ShowInTaskbar="False" ResizeMode="NoResize"
+        Background="Transparent" ShowInTaskbar="False" ResizeMode="NoResize"
         />

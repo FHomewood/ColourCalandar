@@ -5,6 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Scheduler"
         mc:Ignorable="d"
-        Title="PopupWindow" Height="450" Width="800"
+        Background="Black"
+        Title="PopupWindow" Height="90" Width="300"
         WindowStyle="None"
-/>
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+>
+    <Label 
+        Name="lblTitle"
+        Content="Sample Text"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top"
+        FontFamily="Century Gothic"
+        FontWeight = "Medium"
+        Foreground="White"
+        FontStretch="Expanded"
+        />
+    
+</Window>

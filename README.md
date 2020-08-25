@@ -1,1 +1,6 @@
-# ColourCalandar
+# Colour Calandar
+## What is Colour Calendar?
+Colour calendar is an organisation planner where the user can input their timetable, the calendar will then overlay a colourfilter overtop the entire monitor for the duration of a task, upon transition the colour of the filter will switch and a popup will inform the user that the task they are supposed to be performing is changing, the benefits of this is that the colour change is a reminder of the intended task throughout the duration of it, also if the user was away from the computer, when they return they will notice the colour change and consult their timetable. Disadvantages of this include that the user may not have all of their tasks at their computer meaning they wont be exposed to this planner for most of their scheduled tasks. In this case a different planner would obviously be preferable. The colour changes over time may cause eye strain, not reccommended for those who suffer with migraines. I don't have any confirmation that it's actually a hazard but I'm concerned since it seems to prompt them in myself during debugging so I might be creating a health hazard. Proceed with caution.
+
+## Why create the Colour Calendar?
+The colour calandar is being developed for a number of reasons, A personal excercise for the developer to experience the WPF environment as well as experimenting with new DLLs. An intruiging experiment in productivity to see if organising excercises by colour proves more useful to people.
