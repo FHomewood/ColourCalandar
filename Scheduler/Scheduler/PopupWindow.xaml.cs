@@ -19,7 +19,7 @@ namespace Scheduler
     {
         MainWindow parent;
         int transitionIndex = 0;
-        double transitionTime;
+        double transitionTime = 5;
 
         //Initialize timer
         DispatcherTimer dispatcherTimer = new DispatcherTimer();
@@ -34,7 +34,7 @@ namespace Scheduler
             this.Top = System.Windows.SystemParameters.PrimaryScreenHeight;
             this.Left = System.Windows.SystemParameters.PrimaryScreenWidth - this.Width;
             this.Background = new SolidColorBrush(Color.FromRgb(0, 20, 30));
-            lblTitle.Margin = new Thickness(0.7*cm, 0, 0, 0);
+            lblTitle.Margin = new Thickness(0.7 * cm, 0, 0, 0);
             lblTitle.FontSize = 15;
             lblTitle.FontFamily = new FontFamily("Century Gothic");
 
@@ -42,9 +42,9 @@ namespace Scheduler
             dispatcherTimer.Tick += timer;
         }
 
-        public void Update(double secDuration)
+        public void Update(string task)
         {
-            transitionTime = secDuration;
+            lblTitle.Content = task;
             dispatcherTimer.Start();
         }
 
@@ -52,7 +52,7 @@ namespace Scheduler
         {
             transitionIndex++;
             double transitionPercentage = transitionIndex * dispatcherTimer.Interval.TotalSeconds / transitionTime;
-            double valHeight = this.Height * (1- Math.Pow(Math.Cos(transitionPercentage * Math.PI),6));
+            double valHeight = this.Height * (1 - Math.Pow(Math.Cos(transitionPercentage * Math.PI), 6));
             this.Top = System.Windows.SystemParameters.PrimaryScreenHeight - valHeight;
             if (transitionPercentage >= 1)
             {

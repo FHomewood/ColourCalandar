@@ -70,7 +70,7 @@ namespace Scheduler
             SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
             base.OnSourceInitialized(e);
 
-            popup.Update(5);
+            popup.Update("Go to lunch");
         }
 
         void dispatcherTimer_Tick(object sender, EventArgs e)
@@ -119,6 +119,7 @@ namespace Scheduler
                 //reset quickly so the transition can be initiated
                 dispatcherTimer.Interval = new TimeSpan(1);
                 //popup show location at beginning of transition
+                popup.Update("Minute reminder");
                 //popup.Show();
             }
         }
