@@ -69,6 +69,8 @@ namespace Scheduler
             int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
             SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
             base.OnSourceInitialized(e);
+
+            popup.Update(5);
         }
 
         void dispatcherTimer_Tick(object sender, EventArgs e)

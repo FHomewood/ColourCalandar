@@ -15,7 +15,7 @@
         Name="lblTitle"
         Content="Sample Text"
         HorizontalAlignment="Left"
-        VerticalAlignment="Top"
+        VerticalAlignment="Center"
         FontFamily="Century Gothic"
         FontWeight = "Medium"
         Foreground="White"
