@@ -28,3 +28,5 @@ E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\obj\Debug\Schedul
 E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\obj\Debug\Scheduler.csproj.CoreCompileInputs.cache
 E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\obj\Debug\Scheduler.exe
 E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\obj\Debug\Scheduler.pdb
+E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\obj\Debug\PopupWindow.g.cs
+E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\obj\Debug\PopupWindow.baml

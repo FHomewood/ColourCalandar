@@ -35,15 +35,20 @@ namespace Scheduler
         DispatcherTimer dispatcherTimer = new DispatcherTimer();
 
         //Colour variables
-        double hue = 0;
+        public double hue = 0;
         int transition = 1;
+
+        //Create popup window object
+        PopupWindow popup;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            popup = new PopupWindow(this);
+            //Set Screen to the primary monitor
             this.Width = System.Windows.SystemParameters.PrimaryScreenWidth;
             this.Height = System.Windows.SystemParameters.PrimaryScreenHeight;
-
 
             //Set time interval
             dispatcherTimer.Interval = new TimeSpan(10 * 1000 * 10);
@@ -51,6 +56,9 @@ namespace Scheduler
             dispatcherTimer.Tick += dispatcherTimer_Tick;
             //Begin the timer
             dispatcherTimer.Start();
+
+            //temporary show popup
+            popup.Show();
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -61,16 +69,13 @@ namespace Scheduler
             int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
             SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
             base.OnSourceInitialized(e);
-        }
 
-        private void Window_Initialized(object sender, EventArgs e)
-        {
+            popup.Update("Go to lunch");
         }
 
         void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-
-            int mSecondsInTransition = 100;
+            int mSecondsInTransition = 50;
             int framesInTransition = 50;
             double hueChange = 1f * Math.PI / 3f;
 
@@ -85,21 +90,25 @@ namespace Scheduler
                 hue += hueChange / (double)framesInTransition;
                 //apply the new colour according to the hue formulae
                 this.Background = new SolidColorBrush(Color.FromArgb(
-                    24,
+                    10, //transparency 24 is a solid option
                     (byte)(128 + 127 * Math.Cos(hue)),
                     (byte)(128 + 127 * Math.Cos(hue + 2 * Math.PI / 3)),
                     (byte)(128 + 127 * Math.Cos(hue + 4 * Math.PI / 3))
                 ));
 
-                //if this is the end of the transition we set the next check to the next next minute (to the dot)
+                //if this is the end of the transition we set the next check to the next next minute (on the dot)
                 if (transition == 0)
-                    dispatcherTimer.Interval = new TimeSpan(10 * 1000 * (1000 - DateTime.Now.Millisecond) + 10 * 1000 * 1000 * (59-DateTime.Now.Second));
+                {
+                    dispatcherTimer.Interval = new TimeSpan(10 * 1000 * (1000 - DateTime.Now.Millisecond) );//+ 10 * 1000 * 1000 * (59 - DateTime.Now.Second));
+                }
             }
             //If we're not mid-transition between scenes
             //Check if we're due to transition
-            else if (DateTime.Now.Minute % 10 != 0)
+            else if (DateTime.Now.Second % 10 != 0)
+            {
                 //not due? check again in 1 minute
-                dispatcherTimer.Interval = new TimeSpan(10 * 1000 * 1000 * 60);
+                dispatcherTimer.Interval = new TimeSpan(10 * 1000 * 1000 );
+            }
             //If we're due a transition
             else
             {
@@ -107,6 +116,9 @@ namespace Scheduler
                 transition = framesInTransition;
                 //reset quickly so the transition can be initiated
                 dispatcherTimer.Interval = new TimeSpan(1);
+
+                //popup show location at beginning of transition
+                popup.Update("10 Second reminder");
             }
         }
     }

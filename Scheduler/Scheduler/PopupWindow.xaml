@@ -1,0 +1,26 @@
+﻿<Window x:Class="Scheduler.PopupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Scheduler"
+        mc:Ignorable="d"
+        Background="Black"
+        Title="PopupWindow" Height="90" Width="300"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Topmost="True"
+>
+    <Label 
+        Name="lblTitle"
+        Content="Sample Text"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Center"
+        FontFamily="Century Gothic"
+        FontWeight = "Medium"
+        Foreground="White"
+        FontStretch="Expanded"
+        />
+    
+</Window>
