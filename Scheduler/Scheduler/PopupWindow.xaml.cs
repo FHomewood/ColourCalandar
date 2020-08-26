@@ -66,8 +66,8 @@ namespace Scheduler
                     (byte)(200 + 55 * Math.Cos(parent.hue + 2 * Math.PI / 3)),
                     (byte)(200 + 55 * Math.Cos(parent.hue + 4 * Math.PI / 3))));
             //update the begin and end times
-            begin = DateTime.UtcNow;
-            end = DateTime.UtcNow.AddSeconds(6);
+            begin = DateTime.Now;
+            end = DateTime.Now.AddSeconds(6);
 
             //begin the timer
             dispatcherTimer.Start();
@@ -76,7 +76,7 @@ namespace Scheduler
         void timer(object sender, EventArgs e)
         {
             //increment the transition progress variable
-            DateTime now = DateTime.UtcNow;
+            DateTime now = DateTime.Now;
             //calculate how far through the transition we are
             double transitionPercentage = (begin - now).TotalSeconds / (begin - end).TotalSeconds;
             //compute how far above the lower border the popup should be

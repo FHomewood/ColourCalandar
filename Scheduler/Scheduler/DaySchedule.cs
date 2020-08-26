@@ -28,5 +28,17 @@ namespace Scheduler
                 tasks[i] = data[i + 1].Substring(6);
             }
         }
+        public DateTime Day
+        {
+            get { return day; }
+        }
+        public DateTime[] Time
+        {
+            get { return times; }
+        }
+        public string[] Task
+        {
+            get { return tasks; }
+        }
     }
 }

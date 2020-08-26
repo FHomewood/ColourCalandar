@@ -39,7 +39,7 @@ namespace Scheduler
         //Colour variables
         public double hue = 0;
         int transition = 1;
-
+        string currentTask = "";
         List<DaySchedule> csv;
 
 
@@ -75,8 +75,7 @@ namespace Scheduler
             int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
             SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
             base.OnSourceInitialized(e);
-
-            popup.Update("Go to lunch");
+            
             csv = ReadCSV();
         }
 
@@ -106,36 +105,66 @@ namespace Scheduler
                 //if this is the end of the transition we set the next check to the next next minute (on the dot)
                 if (transition == 0)
                 {
-                    dispatcherTimer.Interval = new TimeSpan(10 * 1000 * (1000 - DateTime.Now.Millisecond) );//+ 10 * 1000 * 1000 * (59 - DateTime.Now.Second));
+                    dispatcherTimer.Interval = TimeToNextTask();
+                    popup.Update(GetCurrentTaskTitle());
                 }
             }
             //If we're not mid-transition between scenes
             //Check if we're due to transition
-            else if (DateTime.Now.Second % 10 != 0)
+            else if (currentTask != GetCurrentTaskTitle())
             {
-                //not due? check again in 1 minute
-                dispatcherTimer.Interval = new TimeSpan(10 * 1000 * 1000 );
+                transition = framesInTransition;
+                dispatcherTimer.Interval = new TimeSpan(1);
             }
-            //If we're due a transition
             else
             {
-                //set the total number of transition frames
-                transition = framesInTransition;
-                //reset quickly so the transition can be initiated
-                dispatcherTimer.Interval = new TimeSpan(1);
-
-                //popup show location at beginning of transition
-                popup.Update("10 Second reminder");
+                dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             }
+            currentTask = GetCurrentTaskTitle();
         }
         private string GetCurrentTaskTitle()
         {
-
+            //This linear search can likely be improved as the dates are ordered
+            for (int i = 0; i < csv.Count; i++)
+            {
+                if (DateTime.Now > csv[i].Day && 
+                    DateTime.Now < csv[i].Day.AddDays(1))
+                {
+                    for (int j = 0; j < csv[i].Time.Length-1; j++)
+                    {
+                        if (DateTime.Now > csv[i].Time[j] &&
+                            DateTime.Now < csv[i].Time[j + 1])
+                        {
+                            return csv[i].Task[j];
+                        }
+                    }
+                    return csv[i].Task.Last();
+                }
+            }
+            return "";
         }
-        private TimeSpan GetNextTaskTime()
+
+        private TimeSpan TimeToNextTask()
         {
-
+            //This linear search can likely be improved as the dates are ordered
+            for (int i = 0; i < csv.Count; i++)
+            {
+                if (DateTime.Now > csv[i].Day &&
+                    DateTime.Now < csv[i].Day.AddDays(1))
+                {
+                    for (int j = 0; j < csv[i].Time.Length - 1; j++)
+                    {
+                        if (DateTime.Now > csv[i].Time[j] &&
+                            DateTime.Now < csv[i].Time[j + 1])
+                        {
+                            return csv[i].Time[j + 1] - DateTime.Now;
+                        }
+                    }
+                }
+            }
+            return DateTime.Today.AddDays(1) - DateTime.Now;
         }
+
         private List<DaySchedule> ReadCSV()
         {
             List<DaySchedule> csv = new List<DaySchedule>();
