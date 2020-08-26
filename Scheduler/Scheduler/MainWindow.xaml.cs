@@ -15,9 +15,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace Scheduler
 {
+
     public partial class MainWindow : Window
     {
         // Constants used for the window style
@@ -37,6 +39,9 @@ namespace Scheduler
         //Colour variables
         public double hue = 0;
         int transition = 1;
+
+        List<DaySchedule> csv;
+
 
         //Create popup window object
         PopupWindow popup;
@@ -59,6 +64,7 @@ namespace Scheduler
 
             //temporary show popup
             popup.Show();
+            
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -71,6 +77,7 @@ namespace Scheduler
             base.OnSourceInitialized(e);
 
             popup.Update("Go to lunch");
+            csv = ReadCSV();
         }
 
         void dispatcherTimer_Tick(object sender, EventArgs e)
@@ -120,6 +127,27 @@ namespace Scheduler
                 //popup show location at beginning of transition
                 popup.Update("10 Second reminder");
             }
+        }
+        private string GetCurrentTaskTitle()
+        {
+
+        }
+        private TimeSpan GetNextTaskTime()
+        {
+
+        }
+        private List<DaySchedule> ReadCSV()
+        {
+            List<DaySchedule> csv = new List<DaySchedule>();
+
+            // We change file extension here to make sure it's a .csv file.
+            // TODO: Error checking.
+            string[] lines = File.ReadAllLines(System.IO.Path.ChangeExtension("Resources//UserSchedule", ".csv"));
+            for (int i = 0; i < lines.Length; i++)
+            {
+                csv.Add(new DaySchedule(lines[i]));
+            }
+            return csv;
         }
     }
 }
