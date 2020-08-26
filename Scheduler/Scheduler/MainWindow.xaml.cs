@@ -75,7 +75,7 @@ namespace Scheduler
 
         void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            int mSecondsInTransition = 100;
+            int mSecondsInTransition = 50;
             int framesInTransition = 50;
             double hueChange = 1f * Math.PI / 3f;
 
@@ -99,17 +99,15 @@ namespace Scheduler
                 //if this is the end of the transition we set the next check to the next next minute (on the dot)
                 if (transition == 0)
                 {
-                    dispatcherTimer.Interval = new TimeSpan(10 * 1000 * (1000 - DateTime.Now.Millisecond) + 10 * 1000 * 1000 * (59 - DateTime.Now.Second));
-                    //popup hide at the end of transition
-                    //popup.Hide();
+                    dispatcherTimer.Interval = new TimeSpan(10 * 1000 * (1000 - DateTime.Now.Millisecond) );//+ 10 * 1000 * 1000 * (59 - DateTime.Now.Second));
                 }
             }
             //If we're not mid-transition between scenes
             //Check if we're due to transition
-            else if (DateTime.Now.Minute % 1 != 0)
+            else if (DateTime.Now.Second % 10 != 0)
             {
                 //not due? check again in 1 minute
-                dispatcherTimer.Interval = new TimeSpan(10 * 1000 * 1000 * 60);
+                dispatcherTimer.Interval = new TimeSpan(10 * 1000 * 1000 );
             }
             //If we're due a transition
             else
@@ -118,9 +116,9 @@ namespace Scheduler
                 transition = framesInTransition;
                 //reset quickly so the transition can be initiated
                 dispatcherTimer.Interval = new TimeSpan(1);
+
                 //popup show location at beginning of transition
-                popup.Update("Minute reminder");
-                //popup.Show();
+                popup.Update("10 Second reminder");
             }
         }
     }
