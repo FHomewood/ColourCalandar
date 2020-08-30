@@ -72,6 +72,14 @@ namespace Scheduler
             //begin the timer
             dispatcherTimer.Start();
         }
+        public void Update()
+        {
+            begin = DateTime.Now;
+            end = DateTime.Now.AddSeconds(6);
+
+            //begin the timer
+            dispatcherTimer.Start();
+        }
 
         void timer(object sender, EventArgs e)
         {

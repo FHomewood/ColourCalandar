@@ -45,6 +45,8 @@ namespace Scheduler
         string currentTask = "";
         List<DaySchedule> csv;
 
+        Key previous_keypressed;
+
 
         //Create popup window object
         PopupWindow popup;
@@ -132,6 +134,7 @@ namespace Scheduler
             }
             currentTask = GetCurrentTaskTitle();
         }
+
         private string GetCurrentTaskTitle()
         {
             //This linear search can likely be improved as the dates are ordered
@@ -191,9 +194,21 @@ namespace Scheduler
 
         void OnKeyPressed(object sender, KeyPressedArgs e)
         {
-            popup.Update(e.KeyPressed.ToString());
+            Key previousKeyReplacement = e.KeyPressed;
+            if (previous_keypressed == Key.RightAlt) {
+                previousKeyReplacement = Key.None;
+                switch (e.KeyPressed)
+                {
+                    case Key.T:         {   //hotkey for reshowing the popup menu
+                                            popup.Update();
+                                            break;                                          }
+                    case Key.Space:     {   //hotkey for showing/hiding the planner menu
+                                            break;                                          }
+                }
+            }
+            previous_keypressed = previousKeyReplacement;
         }
-
+        
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             keyboardHook.UnHookKeyboard();
