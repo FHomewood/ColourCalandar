@@ -36,6 +36,9 @@ namespace Scheduler
         //Initialize timer
         DispatcherTimer dispatcherTimer = new DispatcherTimer();
 
+        //Initialize keyboard hook
+        LowLevelKeyboardListener keyboardHook;
+
         //Colour variables
         public double hue = 0;
         int transition = 1;
@@ -71,11 +74,18 @@ namespace Scheduler
         {
             // Get this window's handle
             IntPtr hwnd = new WindowInteropHelper(this).Handle;
+
             // Change the extended window style to include WS_EX_TRANSPARENT
             int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
             SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
             base.OnSourceInitialized(e);
-            
+
+            //Link the current keyboard to the hook and define the key input function
+            keyboardHook = new LowLevelKeyboardListener();
+            keyboardHook.OnKeyPressed += OnKeyPressed;
+            keyboardHook.HookKeyboard();
+
+            //pull calendar from the UserSchedule.csv resource
             csv = ReadCSV();
         }
 
@@ -177,6 +187,16 @@ namespace Scheduler
                 csv.Add(new DaySchedule(lines[i]));
             }
             return csv;
+        }
+
+        void OnKeyPressed(object sender, KeyPressedArgs e)
+        {
+            popup.Update(e.KeyPressed.ToString());
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            keyboardHook.UnHookKeyboard();
         }
     }
 }
