@@ -66,6 +66,8 @@ namespace Scheduler
  
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
+
+        
     }
  
     public class KeyPressedArgs : EventArgs

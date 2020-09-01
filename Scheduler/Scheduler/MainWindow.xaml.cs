@@ -34,7 +34,9 @@ namespace Scheduler
         public static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
 
         //Initialize timer
-        DispatcherTimer dispatcherTimer = new DispatcherTimer();
+        DispatcherTimer _timer = new DispatcherTimer();
+        public double winFramerate = 60;
+        public double cm = (double)(new System.Windows.LengthConverter().ConvertFrom("1cm"));
 
         //Initialize keyboard hook
         LowLevelKeyboardListener keyboardHook;
@@ -43,33 +45,36 @@ namespace Scheduler
         public double hue = 0;
         int transition = 1;
         string currentTask = "";
-        List<DaySchedule> csv;
+        public List<DaySchedule> csv;
 
         Key previous_keypressed;
 
-
         //Create popup window object
         PopupWindow popup;
+        PlannerWindow planner;
 
         public MainWindow()
         {
             InitializeComponent();
 
             popup = new PopupWindow(this);
+            planner = new PlannerWindow(this);
+
             //Set Screen to the primary monitor
             this.Width = System.Windows.SystemParameters.PrimaryScreenWidth;
             this.Height = System.Windows.SystemParameters.PrimaryScreenHeight;
 
             //Set time interval
-            dispatcherTimer.Interval = new TimeSpan(10 * 1000 * 10);
+            _timer.Interval = new TimeSpan(10 * 1000 * 10);
             //Add the tick event
-            dispatcherTimer.Tick += dispatcherTimer_Tick;
+            _timer.Tick += tick;
             //Begin the timer
-            dispatcherTimer.Start();
+            _timer.Start();
 
             //temporary show popup
             popup.Show();
-            
+            planner.Show();
+
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -91,7 +96,7 @@ namespace Scheduler
             csv = ReadCSV();
         }
 
-        void dispatcherTimer_Tick(object sender, EventArgs e)
+        void tick(object sender, EventArgs e)
         {
             int mSecondsInTransition = 50;
             int framesInTransition = 50;
@@ -102,7 +107,7 @@ namespace Scheduler
             {
                 transition--;
                 //set the timer according to the specified framerate
-                dispatcherTimer.Interval = new TimeSpan(10 * 1000 * mSecondsInTransition / framesInTransition);
+                _timer.Interval = new TimeSpan(10 * 1000 * mSecondsInTransition / framesInTransition);
 
                 //Change the hue
                 hue += hueChange / (double)framesInTransition;
@@ -117,7 +122,7 @@ namespace Scheduler
                 //if this is the end of the transition we set the next check to the next next minute (on the dot)
                 if (transition == 0)
                 {
-                    dispatcherTimer.Interval = TimeToNextTask();
+                    _timer.Interval = TimeToNextTask();
                     popup.Update(GetCurrentTaskTitle());
                 }
             }
@@ -126,11 +131,11 @@ namespace Scheduler
             else if (currentTask != GetCurrentTaskTitle())
             {
                 transition = framesInTransition;
-                dispatcherTimer.Interval = new TimeSpan(1);
+                _timer.Interval = new TimeSpan(1);
             }
             else
             {
-                dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+                _timer.Interval = new TimeSpan(0, 0, 1);
             }
             currentTask = GetCurrentTaskTitle();
         }
@@ -199,10 +204,11 @@ namespace Scheduler
                 previousKeyReplacement = Key.None;
                 switch (e.KeyPressed)
                 {
-                    case Key.T:         {   //hotkey for reshowing the popup menu
+                    case Key.L:         {   //hotkey for reshowing the popup menu
                                             popup.Update();
                                             break;                                          }
                     case Key.Space:     {   //hotkey for showing/hiding the planner menu
+                                            planner.Transition();
                                             break;                                          }
                 }
             }

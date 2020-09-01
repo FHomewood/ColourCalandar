@@ -30,3 +30,5 @@ E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\obj\Debug\Schedul
 E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\obj\Debug\Scheduler.pdb
 E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\obj\Debug\PopupWindow.g.cs
 E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\obj\Debug\PopupWindow.baml
+E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\obj\Debug\PlannerWindow.g.cs
+E:\Frankie\Documents\GitHub\ColourCalandar\Scheduler\Scheduler\obj\Debug\PlannerWindow.baml
