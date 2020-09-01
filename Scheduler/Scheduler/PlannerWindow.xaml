@@ -6,12 +6,11 @@
         xmlns:local="clr-namespace:Scheduler"
         mc:Ignorable="d"
         WindowStyle ="None"
-        Title="PlannerWindow" Height="450" Width="800">
-    <Grid Background="#FF00141E">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="41*"/>
-            <RowDefinition Height="401*"/>
-        </Grid.RowDefinitions>
+        Title="PlannerWindow" 
+        Height="450" 
+        Width="800"
+        Background="#ff00141e"
+        >
+    <Grid Name="grid" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100"/>
 
-    </Grid>
 </Window>

@@ -57,9 +57,6 @@ namespace Scheduler
         {
             InitializeComponent();
 
-            popup = new PopupWindow(this);
-            planner = new PlannerWindow(this);
-
             //Set Screen to the primary monitor
             this.Width = System.Windows.SystemParameters.PrimaryScreenWidth;
             this.Height = System.Windows.SystemParameters.PrimaryScreenHeight;
@@ -70,6 +67,12 @@ namespace Scheduler
             _timer.Tick += tick;
             //Begin the timer
             _timer.Start();
+
+            //pull calendar from the UserSchedule.csv resource
+            csv = ReadCSV();
+
+            popup = new PopupWindow(this);
+            planner = new PlannerWindow(this);
 
             //temporary show popup
             popup.Show();
@@ -91,9 +94,6 @@ namespace Scheduler
             keyboardHook = new LowLevelKeyboardListener();
             keyboardHook.OnKeyPressed += OnKeyPressed;
             keyboardHook.HookKeyboard();
-
-            //pull calendar from the UserSchedule.csv resource
-            csv = ReadCSV();
         }
 
         void tick(object sender, EventArgs e)

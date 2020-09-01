@@ -29,8 +29,33 @@ namespace Scheduler
             _timer.Tick += tick;
             this.parent = parent;
 
+            this.Height = System.Windows.SystemParameters.PrimaryScreenHeight / 2;
+            this.Width  = System.Windows.SystemParameters.PrimaryScreenWidth  / 2;
+            grid.Height = this.Height;
+            grid.Width = this.Width;
+
+
+
+
             this.Top = -this.Height ;
             this.Left = System.Windows.SystemParameters.PrimaryScreenWidth/2 - this.Width / 2;
+
+            DrawSchedule();
+        }
+
+        private void DrawSchedule()
+        {
+            for (int i = 0; i < parent.csv.Count; i++)
+            {
+                for (int j = 0; j < parent.csv[i].Task.Length; j++)
+                {
+                    Rectangle rect = new Rectangle();
+                    rect.Height = 10;
+                    rect.Width = 10;
+                    rect.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    grid.Children.Add(rect);
+                }
+            }
         }
 
         public void Transition()
@@ -39,7 +64,6 @@ namespace Scheduler
 
             begin = DateTime.Now;
             end = begin.AddSeconds(1);
-
             _timer.Start();
         }
 
@@ -63,24 +87,6 @@ namespace Scheduler
                 if (showing) this.Top = showingloc;
                 else this.Top = hiddenloc;
             }
-
-
-
-            ////calculate how far through the transition we are
-            //double transitionPercentage = (begin - DateTime.Now).TotalSeconds / (begin - end).TotalSeconds;
-            ////compute how far above the lower border the popup should be
-            //double valHeight = this.Height * (1 - Math.Pow(Math.Cos(transitionPercentage * Math.PI), 8));
-            ////assign this to the window's y coordinate
-            //this.Top = System.Windows.SystemParameters.PrimaryScreenHeight - valHeight;
-            ////if the transition is over
-            //if (transitionPercentage >= 1)
-            //{
-            //    //stop the timer
-            //    this.Top = System.Windows.SystemParameters.PrimaryScreenHeight;
-            //    _timer.Stop();
-            //}
-
-
         }
 
         private void tick(object sender, EventArgs e)
