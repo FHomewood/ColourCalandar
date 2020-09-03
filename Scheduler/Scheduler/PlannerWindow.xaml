@@ -10,7 +10,8 @@
         Height="450" 
         Width="800"
         Background="#ff00141e"
+        ShowInTaskbar="False"
         >
-    <Grid Name="grid" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100"/>
+    <Grid Name="grid" HorizontalAlignment="Left" Height="450" VerticalAlignment="Top" Width="790" Margin="100,0,0,0"/>
 
 </Window>
