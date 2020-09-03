@@ -204,6 +204,10 @@ namespace Scheduler
                                             break;                                          }
                     case Key.Space:     {   //hotkey for showing/hiding the planner menu
                                             break;                                          }
+                    case Key.Escape:    {   //hotkey for exiting program
+                                            popup.Close();
+                                            this.Close();
+                                            break;                                          }
                 }
             }
             previous_keypressed = previousKeyReplacement;
