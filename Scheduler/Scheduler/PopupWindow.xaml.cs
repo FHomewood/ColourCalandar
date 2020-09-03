@@ -76,7 +76,7 @@ namespace Scheduler
         {
             begin = DateTime.Now;
             end = DateTime.Now.AddSeconds(6);
-
+            this.Show();
             //begin the timer
             dispatcherTimer.Start();
         }
@@ -97,6 +97,8 @@ namespace Scheduler
                 //stop the timer
                 this.Top = System.Windows.SystemParameters.PrimaryScreenHeight;
                 dispatcherTimer.Stop();
+                //hide window
+                this.Hide();
             }
                 
         }
