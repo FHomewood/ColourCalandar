@@ -40,7 +40,7 @@ namespace Scheduler
         LowLevelKeyboardListener keyboardHook;
 
         //Colour variables
-        public Color currentTaskcol = Color.FromRgb(255,255,255);
+        public Color currentTaskcol = Color.FromRgb(128,128,128);
         int transition = 50;
         string currentTask = "";
         List<DaySchedule> csv;
@@ -107,10 +107,13 @@ namespace Scheduler
 
                 double transitionCompletion =  1 - ((double)transition) / (double)framesInTransition;
                 //Change the colour
+
                 byte red   = (byte)(beginColour.R + transitionCompletion * (targetColour.R - beginColour.R));
                 byte green = (byte)(beginColour.G + transitionCompletion * (targetColour.G - beginColour.G));
                 byte blue  = (byte)(beginColour.B + transitionCompletion * (targetColour.B - beginColour.B));
-                transitionColour = Color.FromArgb(15,red, green, blue);
+
+                
+                transitionColour = Color.FromArgb((byte)(5+ 10*Math.Pow(Math.Cos(transitionCompletion * Math.PI),2)),red, green, blue);
 
                 //apply the new colour according to the hue formulae
 
