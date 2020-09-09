@@ -40,7 +40,7 @@ namespace Scheduler
         LowLevelKeyboardListener keyboardHook;
 
         //Colour variables
-        public double hue = 0;
+        public Color currentTaskcol = Color.FromRgb(255,255,255);
         int transition = 1;
         string currentTask = "";
         List<DaySchedule> csv;
@@ -95,7 +95,7 @@ namespace Scheduler
         {
             int mSecondsInTransition = 50;
             int framesInTransition = 50;
-            double hueChange = 1f * Math.PI / 3f;
+            Color targetColour = GetNextTaskColour();
 
             //If we're mid-transition between scenes
             if (transition > 0)
@@ -104,15 +104,11 @@ namespace Scheduler
                 //set the timer according to the specified framerate
                 dispatcherTimer.Interval = new TimeSpan(10 * 1000 * mSecondsInTransition / framesInTransition);
 
-                //Change the hue
-                hue += hueChange / (double)framesInTransition;
+                //Change the colour
+
+
                 //apply the new colour according to the hue formulae
-                this.Background = new SolidColorBrush(Color.FromArgb(
-                    10, //transparency 24 is a solid option
-                    (byte)(128 + 127 * Math.Cos(hue)),
-                    (byte)(128 + 127 * Math.Cos(hue + 2 * Math.PI / 3)),
-                    (byte)(128 + 127 * Math.Cos(hue + 4 * Math.PI / 3))
-                ));
+
 
                 //if this is the end of the transition we set the next check to the next next minute (on the dot)
                 if (transition == 0)
@@ -140,10 +136,10 @@ namespace Scheduler
             //This linear search can likely be improved as the dates are ordered
             for (int i = 0; i < csv.Count; i++)
             {
-                if (DateTime.Now > csv[i].Day && 
+                if (DateTime.Now > csv[i].Day &&
                     DateTime.Now < csv[i].Day.AddDays(1))
                 {
-                    for (int j = 0; j < csv[i].Time.Length-1; j++)
+                    for (int j = 0; j < csv[i].Time.Length - 1; j++)
                     {
                         if (DateTime.Now > csv[i].Time[j] &&
                             DateTime.Now < csv[i].Time[j + 1])
@@ -155,6 +151,28 @@ namespace Scheduler
                 }
             }
             return "";
+        }
+
+        private Color GetNextTaskColour()
+        {
+            //This linear search can likely be improved as the dates are ordered
+            for (int i = 0; i < csv.Count; i++)
+            {
+                if (DateTime.Now > csv[i].Day &&
+                    DateTime.Now < csv[i].Day.AddDays(1))
+                {
+                    for (int j = 0; j < csv[i].Time.Length - 1; j++)
+                    {
+                        if (DateTime.Now > csv[i].Time[j] &&
+                            DateTime.Now < csv[i].Time[j + 1])
+                        {
+                            return csv[i].Colour[j];
+                        }
+                    }
+                    return csv[i].Colour.Last();
+                }
+            }
+            return Color.FromRgb(255,255,255);
         }
 
         private TimeSpan TimeToNextTask()

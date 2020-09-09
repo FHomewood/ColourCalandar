@@ -61,10 +61,7 @@ namespace Scheduler
         {
             //set the text contents to be the desired task
             lblTitle.Content = task;
-            lblTitle.Foreground = new SolidColorBrush(Color.FromRgb(
-                    (byte)(200 + 55 * Math.Cos(parent.hue)),
-                    (byte)(200 + 55 * Math.Cos(parent.hue + 2 * Math.PI / 3)),
-                    (byte)(200 + 55 * Math.Cos(parent.hue + 4 * Math.PI / 3))));
+            lblTitle.Foreground = new SolidColorBrush(parent.currentTaskcol);
             //update the begin and end times
             begin = DateTime.Now;
             end = DateTime.Now.AddSeconds(6);
