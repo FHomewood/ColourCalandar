@@ -41,7 +41,7 @@ namespace Scheduler
 
         //Colour variables
         public Color currentTaskcol = Color.FromRgb(255,255,255);
-        int transition = 1;
+        int transition = 50;
         string currentTask = "";
         List<DaySchedule> csv;
 
@@ -96,7 +96,8 @@ namespace Scheduler
             int mSecondsInTransition = 50;
             int framesInTransition = 50;
             Color targetColour = GetNextTaskColour();
-
+            Color beginColour = currentTaskcol;
+            Color transitionColour;
             //If we're mid-transition between scenes
             if (transition > 0)
             {
@@ -104,15 +105,21 @@ namespace Scheduler
                 //set the timer according to the specified framerate
                 dispatcherTimer.Interval = new TimeSpan(10 * 1000 * mSecondsInTransition / framesInTransition);
 
+                double transitionCompletion =  1 - ((double)transition) / (double)framesInTransition;
                 //Change the colour
-
+                byte red   = (byte)(beginColour.R + transitionCompletion * (targetColour.R - beginColour.R));
+                byte green = (byte)(beginColour.G + transitionCompletion * (targetColour.G - beginColour.G));
+                byte blue  = (byte)(beginColour.B + transitionCompletion * (targetColour.B - beginColour.B));
+                transitionColour = Color.FromArgb(15,red, green, blue);
 
                 //apply the new colour according to the hue formulae
 
+                this.Background = new SolidColorBrush(transitionColour);
 
                 //if this is the end of the transition we set the next check to the next next minute (on the dot)
                 if (transition == 0)
                 {
+                    currentTaskcol = targetColour;
                     dispatcherTimer.Interval = TimeToNextTask();
                     popup.Update(GetCurrentTaskTitle());
                 }
@@ -129,6 +136,7 @@ namespace Scheduler
                 dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             }
             currentTask = GetCurrentTaskTitle();
+            currentTaskcol = GetCurrentTaskColour();
         }
 
         private string GetCurrentTaskTitle()
@@ -152,8 +160,30 @@ namespace Scheduler
             }
             return "";
         }
-
+        
         private Color GetNextTaskColour()
+        {
+            //This linear search can likely be improved as the dates are ordered
+            for (int i = 0; i < csv.Count; i++)
+            {
+                if (DateTime.Now > csv[i].Day &&
+                    DateTime.Now < csv[i].Day.AddDays(1))
+                {
+                    for (int j = 0; j < csv[i].Time.Length - 1; j++)
+                    {
+                        if (DateTime.Now > csv[i].Time[j] &&
+                            DateTime.Now < csv[i].Time[j + 1])
+                        {
+                            return csv[i].Colour[j+1];
+                        }
+                    }
+                    return csv[i].Colour.Last();
+                }
+            }
+            return Color.FromRgb(255,255,255);
+        }
+
+        private Color GetCurrentTaskColour()
         {
             //This linear search can likely be improved as the dates are ordered
             for (int i = 0; i < csv.Count; i++)
@@ -172,7 +202,7 @@ namespace Scheduler
                     return csv[i].Colour.Last();
                 }
             }
-            return Color.FromRgb(255,255,255);
+            return Color.FromRgb(255, 255, 255);
         }
 
         private TimeSpan TimeToNextTask()
