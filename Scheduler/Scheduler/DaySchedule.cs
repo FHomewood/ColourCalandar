@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Scheduler
 {
-    class DaySchedule
+    public class DaySchedule
     {
         DateTime day;
         DateTime[] times;

@@ -18,12 +18,11 @@ namespace Scheduler
     public partial class PopupWindow : Window
     {
         MainWindow parent;
-        double framerate = 60;
         DateTime begin,end;
 
 
         //Initialize timer
-        DispatcherTimer dispatcherTimer = new DispatcherTimer();
+        DispatcherTimer _timer = new DispatcherTimer();
 
         public PopupWindow(MainWindow parent)
         {
@@ -33,13 +32,10 @@ namespace Scheduler
             //this isn't actually used at any point yet
             this.parent = parent;
 
-            //stores the pixel number of 1 centimeter on the user's monitor for dimension use
-            double cm = (double)(new System.Windows.LengthConverter().ConvertFrom("1cm"));
-
             //format popup window
                 //size
-            this.Width = 7 * cm;
-            this.Height = 1 * cm;
+            this.Width = 7 * parent.cm;
+            this.Height = 1 * parent.cm;
                 //location
             this.Top = System.Windows.SystemParameters.PrimaryScreenHeight;
             this.Left = System.Windows.SystemParameters.PrimaryScreenWidth - this.Width;
@@ -47,13 +43,13 @@ namespace Scheduler
             this.Background = new SolidColorBrush(Color.FromRgb(0, 20, 30));
 
             //format popup text
-            lblTitle.Margin = new Thickness(0.7 * cm, 0, 0, 0);
+            lblTitle.Margin = new Thickness(0.7 * parent.cm, 0, 0, 0);
             lblTitle.FontSize = 15;
             lblTitle.FontFamily = new FontFamily("Century Gothic");
 
             //set the timer interval and assign the timer event to a subroutine
-            dispatcherTimer.Interval = new TimeSpan((long)(10000000/framerate));
-            dispatcherTimer.Tick += timer;
+            _timer.Interval = new TimeSpan((long)(10000000/parent.winFramerate));
+            _timer.Tick += tick;
         }
 
         //this is the subroutine to call to automatically notify a new task occuring
@@ -70,7 +66,7 @@ namespace Scheduler
             end = DateTime.Now.AddSeconds(6);
 
             //begin the timer
-            dispatcherTimer.Start();
+            _timer.Start();
         }
         public void Update()
         {
@@ -78,27 +74,24 @@ namespace Scheduler
             end = DateTime.Now.AddSeconds(6);
             this.Show();
             //begin the timer
-            dispatcherTimer.Start();
+            _timer.Start();
         }
 
-        void timer(object sender, EventArgs e)
+        void tick(object sender, EventArgs e)
         {
-            //increment the transition progress variable
-            DateTime now = DateTime.Now;
             //calculate how far through the transition we are
-            double transitionPercentage = (begin - now).TotalSeconds / (begin - end).TotalSeconds;
+            double transitionPercentage = (begin - DateTime.Now).TotalSeconds / (begin - end).TotalSeconds;
             //compute how far above the lower border the popup should be
             double valHeight = this.Height * (1 - Math.Pow(Math.Cos(transitionPercentage * Math.PI), 8));
             //assign this to the window's y coordinate
             this.Top = System.Windows.SystemParameters.PrimaryScreenHeight - valHeight;
+            this.Refresh();
             //if the transition is over
             if (transitionPercentage >= 1)
             {
                 //stop the timer
                 this.Top = System.Windows.SystemParameters.PrimaryScreenHeight;
-                dispatcherTimer.Stop();
-                //hide window
-                this.Hide();
+                _timer.Stop();
             }
                 
         }
