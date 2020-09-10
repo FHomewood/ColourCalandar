@@ -54,16 +54,17 @@ namespace Scheduler
             {
                 for (int j = -1; j < parent.csv[i].Task.Length; j++) 
                 {
-                    double LeftRightMargins = 20;
-                    double TopBottomMargins = 10;
+                    double LeftRightMargins = 7;
+                    double TopBottomMargins = 5;
                     Border border = new Border();
                     border.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0));
-                    border.BorderThickness = new Thickness(5);
-                    border.CornerRadius = new CornerRadius(5);
-
+                    border.BorderThickness = new Thickness(1);
+                    border.CornerRadius = new CornerRadius(6);
+                    border.Padding = new Thickness(0);
+                    border.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                     TextBlock tBlock = new TextBlock();
-                    tBlock.Padding = new Thickness();
-                    tBlock.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    tBlock.Padding = new Thickness(0);
+                    tBlock.Margin = new Thickness(0);
                     border.Width = gridWidth / 7 - 2 * LeftRightMargins;
 
                     //Gotta find height and y-pos of each task
@@ -80,7 +81,6 @@ namespace Scheduler
 
                         //Since it's the first task of the day it has no offset
                         task_ypos = 0;
-                        tBlock.Background = new SolidColorBrush( Color.FromArgb(255, 255, 0, 0) );
                     }
 
                     else if (j == parent.csv[i].Task.Length - 1) //if it's the last task then we need to make sure it spans the remainder of the day
@@ -89,11 +89,10 @@ namespace Scheduler
                         tBlock.Text = parent.csv[i].Task[j];
 
                         //Get the time until midnight and fill the gap
-                        task_height = (24 - parent.csv[i].Time[j].Hour) * 60 - (parent.csv[i].Time[j].Minute);
+                        task_height = (24 - parent.csv[i].Time[j].Hour) * 60 - (parent.csv[i].Time[j].Minute) - 2 * TopBottomMargins;
 
                         //Set the ypos
                         task_ypos = (parent.csv[i].Time[j].Hour * 60) + parent.csv[i].Time[j].Minute;
-                        tBlock.Background = new SolidColorBrush( Color.FromArgb(255, 0, 255, 0) );
                     }
                     else //if not last or first we can simply do it as we would expect
                     {
@@ -109,22 +108,22 @@ namespace Scheduler
                     }
                     task_ypos *= gridHeight / minutesinaday;
                     task_height *= gridHeight / minutesinaday;
-                    task_ypos += TopBottomMargins;
                     task_height -= TopBottomMargins;
                     border.Height = task_height;
-                    border.Margin = new Thickness(- (i * (border.Width) + (2*i + 1)*LeftRightMargins)
+                    border.Margin = new Thickness(- ( (i+1) * (border.Width) + (2*i)*LeftRightMargins)
                         ,task_ypos,0,0);
                     border.VerticalAlignment = VerticalAlignment.Top;
                     border.HorizontalAlignment = HorizontalAlignment.Left;
-                    border.BorderBrush = tBlock.Background;
+                    tBlock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                    tBlock.TextAlignment = TextAlignment.Center;
+                    border.BorderBrush = border.Background;
 
                     double TCentreX, TCentreY;
                     TCentreX = -border.Margin.Left;
                     TCentreY = -border.Margin.Top;
                     TransformGroup TextTransform = new TransformGroup();
-                    TextTransform.Children.Add(new RotateTransform(-90,TCentreX,TCentreY));
-                    TextTransform.Children.Add(new TranslateTransform(0,100));
-                    //TextTransform.Children.Add(new ScaleTransform(this.Width / this.Height, this.Height / this.Width,TCentreX,TCentreY));
+                    TextTransform.Children.Add(new RotateTransform(-90, TCentreX, TCentreY));
+                    //TextTransform.Children.Add( new TranslateTransform(0,0) );
                     border.RenderTransform = TextTransform;
 
                     border.Child = tBlock;
@@ -171,6 +170,9 @@ namespace Scheduler
         {
             grid.Children.Clear();
             DrawSchedule();
+            this.Top = -this.Height;
+            this.Left = System.Windows.SystemParameters.PrimaryScreenWidth / 2 - this.Width / 2;
+            grid.Refresh();
         }
 
         private void tick(object sender, EventArgs e)
