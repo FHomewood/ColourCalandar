@@ -11,7 +11,9 @@
         Width="800"
         Background="#ff00141e"
         ShowInTaskbar="False"
+        SizeChanged="Window_SizeChanged"
+        Topmost="True"
         >
-    <Grid Name="grid" HorizontalAlignment="Left" Height="450" VerticalAlignment="Top" Width="790" Margin="100,0,0,0"/>
+    <Grid Name="grid" HorizontalAlignment="Left" VerticalAlignment="Top" Height="450"  Width="800" Margin="0,0,0,0"/>
 
 </Window>

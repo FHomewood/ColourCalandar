@@ -31,10 +31,8 @@ namespace Scheduler
 
             this.Height = System.Windows.SystemParameters.PrimaryScreenHeight*0.75;
             this.Width  = System.Windows.SystemParameters.PrimaryScreenWidth*0.75;
-            grid.Height = this.Height - 4 * parent.cm;
-            grid.Width = this.Width-7*parent.cm;
-            grid.Margin = new Thickness(6 * parent.cm, 3 *parent.cm, 1 * parent.cm, 0);
-
+            grid.Width = this.Width;
+            grid.Height = this.Height;
 
 
 
@@ -46,63 +44,91 @@ namespace Scheduler
 
         private void DrawSchedule()
         {
+
+            grid.Width = this.Height;
+            grid.Height = this.Width;
             double minutesinaday = 60 * 24;
-
-            for (int i = 0; i < parent.csv.Count; i++)
+            double gridHeight = this.Width;
+            double gridWidth = this.Height;
+            for (int i = 0; i < parent.csv.Count; i++) //i is the day of the task
             {
-                for (int j = -1; j < parent.csv[i].Task.Length; j++)
+                for (int j = -1; j < parent.csv[i].Task.Length; j++) 
                 {
-                    double rectmargins = 10;
-                    Rectangle rect = new Rectangle();
-                    Label lbl = new Label();
-                    rect.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                    rect.Height = grid.Height / 7 - 2 * rectmargins;
+                    double LeftRightMargins = 20;
+                    double TopBottomMargins = 10;
+                    Border border = new Border();
+                    border.BorderBrush = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+                    border.BorderThickness = new Thickness(5);
+                    border.CornerRadius = new CornerRadius(5);
 
+                    TextBlock tBlock = new TextBlock();
+                    tBlock.Padding = new Thickness();
+                    tBlock.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    border.Width = gridWidth / 7 - 2 * LeftRightMargins;
 
-                    double taskoffset;
-                    double taskwidth;
-                    if (j == -1)
+                    //Gotta find height and y-pos of each task
+                    double task_height, task_ypos;
+
+                    if (j == -1) //if it's the first task of the day try to get the previous days final task.
                     {
-                        taskwidth = (parent.csv[i].Time.First().Hour - 6) * 60 + (parent.csv[i].Time.First().Minute);
-                        taskwidth *= grid.Width / minutesinaday;
-                        taskoffset = 0;
-                        try { lbl.Content = parent.csv[i - 1].Task.Last(); }
-                        catch { lbl.Content = ""; }
+                        //Get the text from the previous day's final task
+                        try { tBlock.Text = parent.csv[i - 1].Task.Last(); }
+                        catch { tBlock.Text = ""; }
+
+                        //Get the Time of the first task today and fill the gap
+                        task_height = (parent.csv[i].Time.First().Hour) * 60 + (parent.csv[i].Time.First().Minute);
+
+                        //Since it's the first task of the day it has no offset
+                        task_ypos = 0;
+                        tBlock.Background = new SolidColorBrush( Color.FromArgb(255, 255, 0, 0) );
                     }
-                    else if (parent.csv[i].Time[j] == parent.csv[i].Time.Last())
+
+                    else if (j == parent.csv[i].Task.Length - 1) //if it's the last task then we need to make sure it spans the remainder of the day
                     {
-                        taskwidth = (30 - parent.csv[i].Time[j].Hour) * 60 + (60 - parent.csv[i].Time[j].Minute);
-                        taskwidth *= grid.Width / minutesinaday;
-                        lbl.Content = parent.csv[i].Task[j];
-                        taskoffset = (parent.csv[i].Time[j].Hour * 60
-                                      - 360
-                                      + parent.csv[i].Time[j].Minute  )
-                            * grid.Width / minutesinaday;
+                        //Set the task name
+                        tBlock.Text = parent.csv[i].Task[j];
+
+                        //Get the time until midnight and fill the gap
+                        task_height = (24 - parent.csv[i].Time[j].Hour) * 60 - (parent.csv[i].Time[j].Minute);
+
+                        //Set the ypos
+                        task_ypos = (parent.csv[i].Time[j].Hour * 60) + parent.csv[i].Time[j].Minute;
+                        tBlock.Background = new SolidColorBrush( Color.FromArgb(255, 0, 255, 0) );
                     }
-                    else
+                    else //if not last or first we can simply do it as we would expect
                     {
-                        taskwidth = (parent.csv[i].Time[j + 1].Hour - parent.csv[i].Time[j].Hour) * 60
+                        //set text
+                        tBlock.Text = parent.csv[i].Task[j];
+
+                        //set height
+                        task_height = (parent.csv[i].Time[j + 1].Hour - parent.csv[i].Time[j].Hour) * 60
                                     + (parent.csv[i].Time[j + 1].Minute - parent.csv[i].Time[j].Minute);
-                        taskwidth *= grid.Width / minutesinaday;
-                        lbl.Content = parent.csv[i].Task[j];
-                        taskoffset = (parent.csv[i].Time[j].Hour * 60
-                                      - 360
-                                      + parent.csv[i].Time[j].Minute  )
-                            * grid.Width / minutesinaday;
-                    }
 
-                    rect.Margin = new Thickness(taskoffset, rectmargins + (rect.Height + 2 * rectmargins - 2) * i,0,0);
-                    lbl.Margin = rect.Margin;
-                    rect.Width = taskwidth - 2;
-                    rect.VerticalAlignment = VerticalAlignment.Top;
-                    rect.HorizontalAlignment = HorizontalAlignment.Left;
-                    TransformGroup labelTransform = new TransformGroup();
-                    labelTransform.Children.Add(new RotateTransform(-90));
-                    labelTransform.Children.Add(new TranslateTransform(0, -2 * rectmargins));
-                    lbl.RenderTransform = labelTransform;
-                    
-                    grid.Children.Add(rect);
-                    grid.Children.Add(lbl);
+                        //set ypos
+                        task_ypos = parent.csv[i].Time[j].Hour * 60 + parent.csv[i].Time[j].Minute;
+                    }
+                    task_ypos *= gridHeight / minutesinaday;
+                    task_height *= gridHeight / minutesinaday;
+                    task_ypos += TopBottomMargins;
+                    task_height -= TopBottomMargins;
+                    border.Height = task_height;
+                    border.Margin = new Thickness(- (i * (border.Width) + (2*i + 1)*LeftRightMargins)
+                        ,task_ypos,0,0);
+                    border.VerticalAlignment = VerticalAlignment.Top;
+                    border.HorizontalAlignment = HorizontalAlignment.Left;
+                    border.BorderBrush = tBlock.Background;
+
+                    double TCentreX, TCentreY;
+                    TCentreX = -border.Margin.Left;
+                    TCentreY = -border.Margin.Top;
+                    TransformGroup TextTransform = new TransformGroup();
+                    TextTransform.Children.Add(new RotateTransform(-90,TCentreX,TCentreY));
+                    TextTransform.Children.Add(new TranslateTransform(0,100));
+                    //TextTransform.Children.Add(new ScaleTransform(this.Width / this.Height, this.Height / this.Width,TCentreX,TCentreY));
+                    border.RenderTransform = TextTransform;
+
+                    border.Child = tBlock;
+                    grid.Children.Add(border);
                 }
             }
         }
@@ -139,6 +165,12 @@ namespace Scheduler
                     this.Visibility = Visibility.Hidden;
                 }
             }
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            grid.Children.Clear();
+            DrawSchedule();
         }
 
         private void tick(object sender, EventArgs e)
